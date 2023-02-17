@@ -56,6 +56,7 @@ using HTTPUpdateStartCB = std::function<void()>;
 using HTTPUpdateEndCB = std::function<void()>;
 using HTTPUpdateErrorCB = std::function<void(int)>;
 using HTTPUpdateProgressCB = std::function<void(int, int)>;
+using HTTPCustomStreamCb = std::function<Stream*(Stream*, uint32_t* const)>;
 
 class HTTPUpdate
 {
@@ -97,11 +98,11 @@ public:
     t_httpUpdate_return updateSpiffs(HTTPClient &httpClient, const String &currentVersion = "");
 
     // Notification callbacks
-    void onStart(HTTPUpdateStartCB cbOnStart)          { _cbStart = cbOnStart; }
-    void onEnd(HTTPUpdateEndCB cbOnEnd)                { _cbEnd = cbOnEnd; }
-    void onError(HTTPUpdateErrorCB cbOnError)          { _cbError = cbOnError; }
-    void onProgress(HTTPUpdateProgressCB cbOnProgress) { _cbProgress = cbOnProgress; }
-
+    void onStart(HTTPUpdateStartCB cbOnStart)                 { _cbStart = cbOnStart; }
+    void onEnd(HTTPUpdateEndCB cbOnEnd)                       { _cbEnd = cbOnEnd; }
+    void onError(HTTPUpdateErrorCB cbOnError)                 { _cbError = cbOnError; }
+    void onProgress(HTTPUpdateProgressCB cbOnProgress)        { _cbProgress = cbOnProgress; }
+    void setCustomStreamCb(HTTPCustomStreamCb cbCustomStream) { _cbCustomStream = cbCustomStream; }
     int getLastError(void);
     String getLastErrorString(void);
 
@@ -127,6 +128,7 @@ private:
     HTTPUpdateEndCB      _cbEnd;
     HTTPUpdateErrorCB    _cbError;
     HTTPUpdateProgressCB _cbProgress;
+    HTTPCustomStreamCb   _cbCustomStream;
 
     int _ledPin;
     uint8_t _ledOn;
