@@ -237,6 +237,19 @@ HTTPUpdateResult HTTPUpdate::handleUpdate(HTTPClient& http, const String& curren
         return HTTP_UPDATE_FAILED;
     }
 
+    Stream * tcpStream = http.getStreamPtr();
+    if (_cbCustomStream) {
+      uint32_t customStreamOverhead = 0;
+      tcpStream = _cbCustomStream(tcpStream, &customStreamOverhead);
+      if(len < customStreamOverhead)
+      {
+        log_e("Custom stream overhead exceeds binary size: %u %i\n", customStreamOverhead, len);
+        http.end();
+        return HTTP_UPDATE_FAILED;
+      }
+
+      len -= customStreamOverhead;
+    }
 
     log_d("Header read fin.\n");
     log_d("Server header:\n");
@@ -292,8 +305,6 @@ HTTPUpdateResult HTTPUpdate::handleUpdate(HTTPClient& http, const String& curren
                     _cbStart();
                 }
 
-                WiFiClient * tcp = http.getStreamPtr();
-
 // To do?                WiFiUDP::stopAll();
 // To do?                WiFiClient::stopAllExcept(tcp);
 
@@ -322,7 +333,7 @@ HTTPUpdateResult HTTPUpdate::handleUpdate(HTTPClient& http, const String& curren
 
                     // check for valid first magic byte
 //                    if(buf[0] != 0xE9) {
-                    if(tcp->peek() != 0xE9) {
+                    if(tcpStream->peek() != 0xE9) {
                         log_e("Magic header does not start with 0xE9\n");
                         _lastError = HTTP_UE_BIN_VERIFY_HEADER_FAILED;
                         http.end();
@@ -341,7 +352,7 @@ HTTPUpdateResult HTTPUpdate::handleUpdate(HTTPClient& http, const String& curren
                     }
 */
                 }
-                if(runUpdate(*tcp, len, http.header("x-MD5"), command)) {
+                if(runUpdate(*tcpStream, len, http.header("x-MD5"), command)) {
                     ret = HTTP_UPDATE_OK;
                     log_d("Update ok\n");
                     http.end();
