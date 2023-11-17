@@ -175,23 +175,23 @@ fat_dir_entry_t * fat_add_root_file(uint8_t * dst, uint8_t index, const char * f
   //Set Firmware Date based on the build time
   static const char * month_names_short[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
   char mstr[8] = {'\0',};
-  const char *str = __DATE__ " " __TIME__;
-  int ms=0, seconds=0, minutes=0, hours=0, year=0, date=0, month=0;
-  int r = sscanf(str,"%s %d %d %d:%d:%d", mstr, &date, &year, &hours, &minutes, &seconds);
-  if(r >= 0){
-    for(int i=0; i<12; i++){
-      if(!strcmp(mstr, month_names_short[i])){
-        month = i;
-        break;
-      }
-    }
-    entry->creation_time_ms = FAT_MS2V(seconds, ms);
-    entry->creation_time_hms = FAT_HMS2V(hours, minutes, seconds);
-    entry->creation_time_ymd = FAT_YMD2V(year, month, date);
-    entry->last_access_ymd = entry->creation_time_ymd;
-    entry->last_modified_hms = entry->creation_time_hms;
-    entry->last_modified_ymd = entry->creation_time_ymd;
-  }
+  // const char *str = __DATE__ " " __TIME__;
+  // int ms=0, seconds=0, minutes=0, hours=0, year=0, date=0, month=0;
+  // int r = sscanf(str,"%s %d %d %d:%d:%d", mstr, &date, &year, &hours, &minutes, &seconds);
+  // if(r >= 0){
+  //   for(int i=0; i<12; i++){
+  //     if(!strcmp(mstr, month_names_short[i])){
+  //       month = i;
+  //       break;
+  //     }
+  //   }
+  //   entry->creation_time_ms = FAT_MS2V(seconds, ms);
+  //   entry->creation_time_hms = FAT_HMS2V(hours, minutes, seconds);
+  //   entry->creation_time_ymd = FAT_YMD2V(year, month, date);
+  //   entry->last_access_ymd = entry->creation_time_ymd;
+  //   entry->last_modified_hms = entry->creation_time_hms;
+  //   entry->last_modified_ymd = entry->creation_time_ymd;
+  // }
   return entry;
 }
 

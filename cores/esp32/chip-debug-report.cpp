@@ -207,7 +207,7 @@ static void printPartitionsInfo(void){
 static void printSoftwareInfo(void){
   chip_report_printf("Software Info:\n");
   chip_report_printf("------------------------------------------\n");
-  chip_report_printf("  Compile Date/Time : %s %s\n", __DATE__, __TIME__);
+  // chip_report_printf("  Compile Date/Time : %s %s\n", __DATE__, __TIME__);
 #ifdef ARDUINO_HOST_OS
   chip_report_printf("  Compile Host OS   : %s\n", ARDUINO_HOST_OS);
 #endif
